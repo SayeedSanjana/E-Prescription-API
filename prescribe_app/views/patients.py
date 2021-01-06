@@ -5,35 +5,30 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import AllowAny
-from prescribe_app.serializers_folder.patient_serializers import ( 
-
+from prescribe_app.serializers.patient_serializers import ( 
     PatientInformationSerializer, 
+    PatientDetailSerializer,
+    PatientInformationSerializerActive
 
 )
-from prescribe_app.serializers_folder.prescription_serializers import ( 
-
-    PrescriptionSerializerView, 
-    PrescriptionSerializerPostView,
-    PrescriptionSerializerPost
-
-)
-from prescribe_app.models import Prescription, PatientInformation
+from prescribe_app.models.patient_info import PatientInformation
+from prescribe_app.models.prescription import Prescription
 
 
+#######    LIST API VIEW FOR SHOWING THE LIST OF ALL PRESCRIPTION AND PATIENT / POST METHOD FOR ADDING NEW PRESCRIPTION ##########
 @api_view(['GET', 'POST'])
-@renderer_classes([JSONRenderer])   
-def prescription_view(request, format=None):
+def patients_view(request):
 
     if request.method == 'GET':
-        prescription = Prescription.objects.all()
-        serializer = PrescriptionSerializerView(prescription, many=True)
+        patient = PatientInformation.objects.all()
+        serializer = PatientInformationSerializer(patient, many=True)
         
         print(serializer.data)
         return Response(serializer.data)
     
     elif request.method == 'POST' :
         
-        serializer = PrescriptionSerializerPostView(data=request.data)
+        serializer = PatientInformationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             print("Data is saving")
@@ -42,27 +37,31 @@ def prescription_view(request, format=None):
             print("Error in POST Method")
             content = {'Error': 'Invalid data'}
             return Response(content,status=status.HTTP_400_BAD_REQUEST)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#######    DETAIL API VIEW FOR SHOWING THE LIST OF PRESCRIPTION FOR EVERY PATIENT ##########
 @api_view(['GET', 'PUT', 'DELETE'])
-def prescription_update_or_delete(request, pk):
+def patient_info_detail(request, pk):
+    
     if request.method == 'GET':
-        obj = Prescription.objects.filter(id=pk, active=True)
-        serializer = PrescriptionSerializerView(instance=obj, many=True)
+        patient = PatientInformation.objects.get(id=pk)
+        
+        serializer = PatientDetailSerializer(instance=patient)
         return Response(serializer.data)
+    
+    
 
     elif request.method == 'PUT':
-        obj = Prescription.objects.get(id=pk)
-        serializer = PrescriptionSerializerPost(instance=obj, data=request.data)
+        obj = PatientInformation.objects.get(id=pk)
+        serializer = PatientInformationSerializerActive(instance=obj, data=request.data)
         if serializer.is_valid():
             serializer.save()
         else:
             content = {'Error': 'Invalid data'}
             return Response(content,status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.data)
-
-    elif request.method == 'DELETE' :
-        obj = Prescription.objects.get(id=pk)
-        obj.delete()
-        return Response("Prescription successfully deleted")
+    else:
+        content = {
+            'Error' :' Patient Information Not Found'
+        }
+        return Response(content,status=status.HTTP_400_BAD_REQUEST)

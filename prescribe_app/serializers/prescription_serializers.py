@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from prescribe_app.models import Prescription, PatientInformation
+from prescribe_app.models.patient_info import PatientInformation
+from prescribe_app.models.prescription import Prescription
 import datetime
 
 class PrescriptionSerializerView(serializers.ModelSerializer):
