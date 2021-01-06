@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from prescribe_app.models import Notes
+from prescribe_app.models.notes import Notes
 
 
 

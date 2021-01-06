@@ -1,24 +1,19 @@
 from django.urls import path
 
-# from .views import(
-    
-#     prescriptionCreate,
-    
-    
-# )
 
-from .views_functions.patients import (
+from .views.patients import (
     patients_view,
     patient_info_detail,
 )
-from .views_functions.prescription import (
+from .views.prescription import (
     prescription_update_or_delete,
     prescription_view,
 )
-from .views_functions.notes import (
+from .views.notes import (
     notes_list_and_create_view,
     notes_info_detail_and_update
 )
+
 
 
 urlpatterns = [
@@ -31,5 +26,6 @@ urlpatterns = [
 
     path('notes-per-patient/', notes_list_and_create_view, name = 'notes_list_and_create_view'),
     path('patient-notes-info/<int:pk>/', notes_info_detail_and_update, name = 'notes_info_detail_and_update'),
+
 
 ]

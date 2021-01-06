@@ -6,8 +6,10 @@ from rest_framework import status
 from rest_framework.renderers import JSONRenderer
 from rest_framework.permissions import AllowAny
 
-from prescribe_app.models import Notes, PatientInformation
-from prescribe_app.serializers_folder.notes_serializers import ( 
+from prescribe_app.models.patient_info import PatientInformation
+from prescribe_app.models.notes import Notes
+
+from prescribe_app.serializers.notes_serializers import ( 
     NotesSerializersView,
     NotesSerializersPost
 

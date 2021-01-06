@@ -1,8 +1,9 @@
 from rest_framework import serializers
 
-from prescribe_app.models import Prescription, PatientInformation
+from prescribe_app.models.patient_info import PatientInformation
+from prescribe_app.models.prescription import Prescription
 
-from prescribe_app.serializers_folder.notes_serializers import (
+from prescribe_app.serializers.notes_serializers import (
     NotesSerializersView
 )
 
